@@ -15,3 +15,6 @@ def toggle_subgroups(m):
 			col = subgroup_l * (i%subgroup_l) + (j%subgroup_l)
 			res[row][col] = m[i][j]
 	return res
+
+def unique_values(v):
+	return list(set(v))

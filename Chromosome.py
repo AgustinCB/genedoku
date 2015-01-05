@@ -31,13 +31,13 @@ class Chromosome:
 		val = 0
 		
 		for i in range(self._len):
-			unique_values = list(set(self._value[i]))
+			unique_values = Matrix.unique_values(self._value[i])
 			val += self._len - len(unique_values)
 			
-			unique_values = list(set(self._value_per_columns[i]))
+			unique_values = Matrix.unique_values(self._value_per_columns[i])
 			val += self._len - len(unique_values)
 
-			unique_values = list(set(self._value_per_subgroup[i]
+			unique_values = Matrix.unique_values(self._value_per_subgroup[i])
 			val += self._len - len(unique_values)
 
 		self._eval = val
@@ -57,8 +57,8 @@ class Chromosome:
 	def _add_by_column(self,other):
 		m_per_column = []
 		for i in range(self._len):
-			unique_values1 = list(set(self._value_per_column[i]))
-			unique_values2 = list(set(other._value_per_column[i]))
+			unique_values1 = len(Matrix.unique_values(self._value_per_column[i]))
+			unique_values2 = len(Matrix.unique_values(other._value_per_column[i]))
 			m_per_column.append(unique_values1 if unique_values1 > unique_values2 else unique_values2)
 		
 		return Matrix.transpose(m_per_column)
@@ -66,8 +66,8 @@ class Chromosome:
 	def _add_by_file(self,other):
 		m = []
 		for i in range(self._len):
-			unique_values1 = list(set(self._value[i]))
-			unique_values2 = list(set(other._value[i]))
+			unique_values1 = len(Matrix.unique_values(self._value[i]))
+			unique_values2 = len(Matrix.unique_values(other._value[i]))
 			m.append(unique_values1 if unique_values1 > unique_values2 else unique_values2)
 		
 		return m
@@ -75,8 +75,8 @@ class Chromosome:
 	def _add_by_subgroup(self,other):
 		m_per_subgroup = []
 		for i in range(self._len):
-			unique_values1 = list(set(self._value_per_subgroup[i]))
-			unique_values2 = list(set(other._value_per_subgroup[i]))
+			unique_values1 = len(Matrix.unique_values(self._value_per_subgroup[i]))
+			unique_values2 = len(Matrix.unique_values(other._value_per_subgroup[i]))
 			m_per_subgroup.append(unique_values1 if unique_values1 > unique_values2 else unique_values2)
 		
 		return Matrix.toggle_subgroup(m_per_subgroup)
