@@ -19,29 +19,43 @@ class Evolution:
 	def start(self):
 		i = 0
 		while i < self.max_iter and self.max_val > 0:
-			new_chrs = []
-			genetic_pool = []
+			self.reproduce()
+			
+			self.mutate()
 
-			for c in self.chromosomes:
-				genetic_pool += [ c for i in range(c.adaptate(self.max_val)) ]
-
-			for i in range(self.initial_length / 2):
-				a = random.choice(genetic_pool)
-				b = random.choice(genetic_pool)
-
-				'''while b == a:
-					b = random.choice(genetic_pool)'''
-
-				new_a,new_b = a + b
-				new_chrs += [new_a,new_b]
-
-			self.chromosomes = new_chrs
 			prev = self.better
 			self.evaluate()
+
 			if self.max_val < prev.evaluate():
 				self.chromosomes[self.worse_index] = prev
 				self.max_val = prev.evaluate()
 			i+=1
+
+		return self.better
+
+	def mutate(self):
+		s = 
+		for c in self.chromosomes:
+			if random.randrange(len(self.chromosomes)) == 0:
+				c.mutate()
+
+	def reproduce(self):
+		new_chrs = []
+		genetic_pool = []
+
+		for c in self.chromosomes:
+			genetic_pool += [ c for i in range(c.adaptate(self.max_val)) ]
+
+		for i in range(len(self.chromosomes) / 2):
+			a = random.choice(genetic_pool)
+			b = random.choice(genetic_pool)
+
+			'''while b == a:
+				b = random.choice(genetic_pool)'''
+			new_a,new_b = a + b
+			new_chrs += [new_a,new_b]
+
+		self.chromosomes = new_chrs
 
 	def evaluate(self):
 		self.max_val = 0

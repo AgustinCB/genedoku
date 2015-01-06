@@ -48,7 +48,7 @@ class Chromosome:
 
 	def __add__(self,other):
 		m1 = self._add_by_subgroup(self,other)
-		m2 = self._add_by_column(self,other) if random.choice([True,False]) else self._add_by_file(self,other)
+		m2 = random.choice([_add_by_column,_add_by_file])(self,other)
 		
 		A = Chromosome (m1)
 		B = Chromosome (m2)
@@ -80,3 +80,51 @@ class Chromosome:
 			m_per_subgroup.append(unique_values1 if unique_values1 > unique_values2 else unique_values2)
 		
 		return Matrix.toggle_subgroup(m_per_subgroup)
+
+	def mutate(self):
+		random.choice([_switch_element,_switch_per_subgroup,_switch_per_file,_switch_per_column])()
+
+	def _switch_per_column(self):
+		col = random.choice(self._value_per_column)
+		x = random.randrange(self._len)
+		y = random.randrange(self._len)
+		while x == y:
+			y = random.randrange(self._len)
+
+		col[x],col[y] = col[y],col[x]
+
+		self._value = Matrix.transpose(self._value_per_column)
+		self._value_per_subgroup = Matrix.toggle_subgroup(self._value)
+	
+	def _switch_per_file(self):
+		row = random.choice(self._value)
+		x = random.randrange(self._len)
+		y = random.randrange(self._len)
+		while x == y:
+			y = random.randrange(self._len)
+
+		row[x],row[y] = row[y],row[x]
+
+		self._value_per_column = Matrix.transpose(self._value)
+		self._value_per_subgroup = Matrix.toggle_subgroup(self._value)
+
+	def _switch_per_subgroup(self):
+		sub = random.choice(self._value_per_subgroup)
+		x = random.randrange(self._len)
+		y = random.randrange(self._len)
+		while x == y:
+			y = random.randrange(self._len)
+
+		sub[x],sub[y] = sub[y],sub[x]
+
+		self._value = Matrix.toggle_subgroup(self._value_per_subgroup)
+		self._value_per_column = Matrix.transpose(self._value)
+	
+	def _switch_element(self):
+		row = random.choice(self._value)
+		x = random.randrange(self._len)
+
+		row[x] = random.choice([i for i in range(self._len)])
+
+		self._value_per_column = Matrix.transpose(self._value)
+		self._value_per_subgroup = Matrix.toggle_subgroup(self._value)
