@@ -1,9 +1,8 @@
 import random
 import sys
-from Chromosome import Chromosome
 
 class Evolution:
-	def __init__(self,problem,initial_length,max_iter):
+	def __init__(self,problem,ChromosomeClass,initial_length,max_iter):
 		self.problem = problem
 		self.initial_length = initial_length
 		self.max_iter = max_iter
@@ -12,13 +11,13 @@ class Evolution:
 
 		self.chromosomes = []
 		for i in range(self.initial_length):
-			c = Chromosome(self.problem)
+			c = ChromosomeClass(self.problem)
 			self.chromosomes.append(c)
 		self.evaluate()
 
 	def start(self):
-		i = 0
-		while i < self.max_iter and self.better_value > 0:
+		self.gen = 0
+		while self.gen < self.max_iter and self.better_value > 0:
 			self.reproduce()
 			
 			self.mutate()
@@ -30,7 +29,7 @@ class Evolution:
 				self.chromosomes[self.worse_index] = prev
 				self.better_value = prev.evaluate()
 				self.better = prev
-			i+=1
+			self.gen+=1
 
 		return self.better
 
