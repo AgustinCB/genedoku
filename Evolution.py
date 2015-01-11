@@ -18,7 +18,7 @@ class Evolution:
 
 	def start(self):
 		i = 0
-		while i < self.max_iter and self.max_val > 0:
+		while i < self.max_iter and self.better_value > 0:
 			self.reproduce()
 			
 			self.mutate()
@@ -26,17 +26,17 @@ class Evolution:
 			prev = self.better
 			self.evaluate()
 
-			if self.max_val < prev.evaluate():
+			if self.better_value > prev.evaluate():
 				self.chromosomes[self.worse_index] = prev
-				self.max_val = prev.evaluate()
+				self.better_value = prev.evaluate()
+				self.better = prev
 			i+=1
 
 		return self.better
 
 	def mutate(self):
-		s = 
 		for c in self.chromosomes:
-			if random.randrange(len(self.chromosomes)) == 0:
+			if random.randrange(len(self.chromosomes)/2) == 0:
 				c.mutate()
 
 	def reproduce(self):
@@ -44,22 +44,24 @@ class Evolution:
 		genetic_pool = []
 
 		for c in self.chromosomes:
-			genetic_pool += [ c for i in range(c.adaptate(self.max_val)) ]
+			genetic_pool += [ c for i in range(c.adaptate(self.worse_value)) ]
 
 		for i in range(len(self.chromosomes) / 2):
 			a = random.choice(genetic_pool)
 			b = random.choice(genetic_pool)
 
-			'''while b == a:
-				b = random.choice(genetic_pool)'''
+			i = 0
+			while b == a and i < 50:
+				b = random.choice(genetic_pool)
+				i += 1
 			new_a,new_b = a + b
 			new_chrs += [new_a,new_b]
 
 		self.chromosomes = new_chrs
 
 	def evaluate(self):
-		self.max_val = 0
-		self.worse_value = sys.maxint
+		self.better_value = sys.maxint
+		self.worse_value = 0
 		self.better = None
 		self.worse_index = 0
 		self.vals = []
@@ -68,10 +70,10 @@ class Evolution:
 			v = c.evaluate()
 			self.vals.append(v)
 			
-			if v >= self.max_val: 
-				self.max_val = v
+			if v <= self.better_value: 
+				self.better_value = v
 				self.better = c
 
-			if v < self.worse_value:
+			if v > self.worse_value:
 				self.worse_index = i
 				self.worse_value = v
