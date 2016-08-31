@@ -1,12 +1,13 @@
 import argparse
 import math
 import sys
-from Evolution import Evolution
-from SudokuChromosome import SudokuChromosome
+import os
+from genedoku.Evolution import Evolution
+from genedoku.SudokuChromosome import SudokuChromosome
 
 parser = argparse.ArgumentParser(description='Resolve sodokus using Genetic Algorithm')
-parser.add_argument('--initial-length', default=50, help='stop the agent, use with --kill to remove running jobs')
-parser.add_argument('--max-generations', default=20000, help='subnet secret (cached)')
+parser.add_argument('--initial-length', default=50, help='length of the initial generation')
+parser.add_argument('--max-generations', default=20000, help='max number of generations')
 
 args = vars(parser.parse_args())
 
@@ -33,7 +34,7 @@ def main():
 		for c in range(len(problem[r])):
 			problem[r][c] = int(problem[r][c])
 
-	e = Evolution(problem,SudokuChromosome,args['initial_length'],args['max_generations'])
+	e = Evolution(problem, SudokuChromosome, args['initial_length'], args['max_generations'])
 	print "Starting..."
 	r = e.start()
 	print "Finished! Result found solution at generation",e.gen,"with",r.evaluate(),"errors:"
